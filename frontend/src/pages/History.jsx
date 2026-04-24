@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FileText, ChevronRight } from 'lucide-react';
+import { FileText, ChevronRight, Trash2 } from 'lucide-react';
 import { api } from '../api';
 
 export default function History() {
@@ -12,6 +12,18 @@ export default function History() {
   }, []);
 
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+
+  const handleDelete = async (id, e) => {
+    e.stopPropagation();
+    if (!confirm('Xóa hóa đơn này?')) return;
+    try {
+      await api.deleteInvoice(id);
+      setInvoices(invoices.filter(inv => inv.id !== id));
+    } catch (e) {
+      console.error(e);
+      alert('Lỗi khi xóa hóa đơn');
+    }
+  };
 
   return (
     <div className="app-container">
@@ -40,6 +52,29 @@ export default function History() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div className="invoice-total">{formatVND(inv.total)}</div>
+            <button
+              onClick={(e) => handleDelete(inv.id, e)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '6px',
+                color: 'var(--text-muted)',
+                transition: 'var(--transition)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--danger)';
+                e.currentTarget.style.background = 'rgba(255, 107, 107, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-muted)';
+                e.currentTarget.style.background = 'none';
+              }}
+              title="Xóa hóa đơn"
+            >
+              <Trash2 size={16} />
+            </button>
             <ChevronRight size={16} style={{ color: 'var(--text-muted)' }} />
           </div>
         </div>

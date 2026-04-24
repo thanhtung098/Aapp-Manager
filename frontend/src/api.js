@@ -24,4 +24,5 @@ export const api = {
   getInvoices: () => request('/invoices'),
   getInvoice: (id) => request(`/invoices/${id}`),
   createInvoice: (data) => request('/invoices', { method: 'POST', body: JSON.stringify(data) }),
+  deleteInvoice: (id) => request(`/invoices/${id}`, { method: 'DELETE' }),
 };

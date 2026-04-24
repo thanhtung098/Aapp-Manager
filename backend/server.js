@@ -89,6 +89,15 @@ app.get('/api/invoices/:id', (req, res) => {
   res.json(invoice);
 });
 
+// ─── DELETE invoice ─────────────────────────────────────
+app.delete('/api/invoices/:id', (req, res) => {
+  const data = loadData();
+  const id = Number(req.params.id);
+  data.invoices = data.invoices.filter(r => r.id !== id);
+  saveData(data);
+  res.json({ success: true });
+});
+
 // ─── Production: Serve static files ─────────────────────────────
 // Point to the built frontend files
 app.use(express.static(path.join(__dirname, '../frontend/dist')));

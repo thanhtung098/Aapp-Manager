@@ -16,43 +16,12 @@
       "price": 1500000
     },
     {
-      "id": 4,
-      "name": "Phòng 4",
-      "price": 1800000
-    },
-    {
       "id": 5,
       "name": "Phòng 5",
       "price": 1500000
     }
   ],
-  "invoices": [
-    {
-      "id": 1,
-      "createdAt": "2026-04-23T06:38:34.135Z",
-      "roomName": "Phòng 1",
-      "roomPrice": 2000000,
-      "month": "2026-04",
-      "oldElec": 1000,
-      "newElec": 1100,
-      "elecUsage": 100,
-      "elecPrice": 3500,
-      "elecCost": 350000,
-      "oldWater": 299,
-      "newWater": 307,
-      "waterUsage": 8,
-      "waterPrice": 15000,
-      "waterCost": 120000,
-      "trashFee": 20000,
-      "internetFee": 100000,
-      "otherFee": 50000,
-      "otherNote": "Rác",
-      "total": 2640000,
-      "landlordName": "Chủ Trọ",
-      "landlordPhone": "0901234567",
-      "address": "123 Đường ABC, Phường XYZ, TP.HCM"
-    }
-  ],
+  "invoices": [],
   "settings": {
     "electricityPrice": 3500,
     "waterPrice": 15000,
