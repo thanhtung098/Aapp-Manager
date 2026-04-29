@@ -54,7 +54,7 @@ export default function Dashboard() {
   return (
     <div className="app-container">
       <div className="page-header animate-in">
-        <h1>🏠 Quản Lý</h1>
+        <h1>🏠 Quản Lý Phòng</h1>
         <p>Chọn phòng để tính tiền & in hóa đơn</p>
       </div>
 
