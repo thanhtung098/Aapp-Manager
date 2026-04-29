@@ -23,11 +23,11 @@ export default function Receipt({ data }) {
         <tbody>
           <tr><td>Tiền phòng</td><td style={{ textAlign: 'right' }}>{formatVND(data.roomPrice)}</td></tr>
           <tr><td colSpan="2" style={{ fontSize: '10px', color: '#666' }}>
-            Điện: {data.oldElec} → {data.newElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)}
+            Điện: {data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)}
           </td></tr>
           <tr><td>Tiền điện</td><td style={{ textAlign: 'right' }}>{formatVND(data.elecCost)}</td></tr>
           <tr><td colSpan="2" style={{ fontSize: '10px', color: '#666' }}>
-            Nước: {data.oldWater} → {data.newWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)}
+            Nước: {data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)}
           </td></tr>
           <tr><td>Tiền nước</td><td style={{ textAlign: 'right' }}>{formatVND(data.waterCost)}</td></tr>
           <tr><td>Rác</td><td style={{ textAlign: 'right' }}>{formatVND(data.trashFee)}</td></tr>
