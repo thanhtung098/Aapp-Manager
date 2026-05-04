@@ -32,7 +32,7 @@ export async function shareInvoiceAsImage(invoice, domElement) {
     domElement.style.display = 'block'; // Ensure it's visible to html2canvas
 
     const canvas = await html2canvas(domElement, {
-      scale: 2, // Higher quality
+      scale: 4, // Extremely high quality
       backgroundColor: '#ffffff',
       useCORS: true,
       logging: false
