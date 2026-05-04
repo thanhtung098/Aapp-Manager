@@ -1,3 +1,5 @@
+import html2canvas from 'html2canvas';
+
 export const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 
 export function generateInvoiceText(invoice) {
@@ -23,32 +25,53 @@ export function generateInvoiceText(invoice) {
   return text;
 }
 
-export async function shareInvoice(invoice) {
-  const text = generateInvoiceText(invoice);
-  
-  // Try Web Share API (Mobile native share sheet - supports Zalo, Messenger, SMS, etc)
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: `Hóa đơn phòng ${invoice.roomName}`,
-        text: text
-      });
-      return true; // Shared successfully
-    } catch (e) {
-      if (e.name !== 'AbortError') {
-        console.error('Lỗi khi chia sẻ:', e);
-      }
-    }
-  }
-  
-  // Fallback: Copy to clipboard and open Zalo via URL scheme
+export async function shareInvoiceAsImage(invoice, domElement) {
   try {
-    await navigator.clipboard.writeText(text);
-    return false; // Indicates it was copied, not natively shared
-  } catch (e) {
-    console.error('Lỗi khi copy:', e);
-    // If even clipboard fails, just alert the text so user can copy manually
-    alert("Không thể tự động copy. Vui lòng copy nội dung dưới đây:\n\n" + text);
+    // Save original styles if we need to temporarily modify them for capture
+    const originalDisplay = domElement.style.display;
+    domElement.style.display = 'block'; // Ensure it's visible to html2canvas
+
+    const canvas = await html2canvas(domElement, {
+      scale: 2, // Higher quality
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      logging: false
+    });
+
+    // Restore original display
+    domElement.style.display = originalDisplay;
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw new Error("Không thể tạo ảnh");
+
+    const file = new File([blob], `HoaDon_${invoice.roomName}_${invoice.month}.png`, { type: 'image/png' });
+
+    // Check if system supports sharing files
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: `Hóa đơn phòng ${invoice.roomName}`,
+      });
+      return true;
+    } else {
+      // Fallback: Download the image directly
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `HoaDon_${invoice.roomName}_${invoice.month}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('Đã tải ảnh hóa đơn xuống. Bạn có thể mở Zalo và gửi ảnh này!');
+      return false;
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error('Lỗi khi chia sẻ ảnh:', error);
+      alert('Không thể tạo hoặc chia sẻ ảnh: ' + error.message);
+    }
     return false;
   }
 }

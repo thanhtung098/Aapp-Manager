@@ -4,7 +4,7 @@ import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Save, Share2 } f
 import { api } from '../api';
 import Receipt from '../components/Receipt';
 import { connectBluetoothPrinter, printInvoiceBluetooth } from '../utils/bluetoothPrinter';
-import { shareInvoice } from '../utils/share';
+import { shareInvoiceAsImage } from '../utils/share';
 
 export default function Calculator() {
   const { roomId } = useParams();
@@ -112,9 +112,14 @@ export default function Calculator() {
   const handleShare = async () => {
     const saved = await saveInvoice();
     if (!saved) return;
-    const isNativeShared = await shareInvoice(saved);
+    
+    // Get the offscreen receipt element
+    const captureEl = document.getElementById('receipt-capture');
+    if (!captureEl) return;
+    
+    const isNativeShared = await shareInvoiceAsImage(saved, captureEl);
     if (!isNativeShared) {
-      if (confirm('Đã copy nội dung hóa đơn! Bạn có muốn mở Zalo để dán không?')) {
+      if (confirm('Đã tải ảnh hóa đơn xuống máy! Bạn có muốn mở Zalo để gửi không?')) {
         window.open('https://zalo.me', '_blank');
       }
     }
@@ -232,7 +237,7 @@ export default function Calculator() {
           </table>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
             <button className="btn btn-primary" onClick={handleShare} style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }}>
-              <Share2 size={18} /> Lưu & Gửi qua Zalo/Tin nhắn
+              <Share2 size={18} /> Lưu & Gửi Ảnh qua Zalo
             </button>
             <button className="btn btn-primary" onClick={handlePrintBT}>
               <Bluetooth size={18} /> Lưu & In qua Bluetooth
@@ -249,6 +254,15 @@ export default function Calculator() {
             }}>
               <Save size={18} /> Chỉ lưu (Không in)
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Offscreen receipt for html2canvas capture */}
+      {result && (
+        <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+          <div id="receipt-capture" style={{ width: '400px', background: 'white' }}>
+            <Receipt data={result} />
           </div>
         </div>
       )}

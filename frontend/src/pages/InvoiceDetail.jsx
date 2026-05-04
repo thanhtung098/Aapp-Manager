@@ -4,7 +4,7 @@ import { ArrowLeft, Printer, Bluetooth, Share2 } from 'lucide-react';
 import { api } from '../api';
 import Receipt from '../components/Receipt';
 import { connectBluetoothPrinter, printInvoiceBluetooth } from '../utils/bluetoothPrinter';
-import { shareInvoice } from '../utils/share';
+import { shareInvoiceAsImage } from '../utils/share';
 
 export default function InvoiceDetail() {
   const { invoiceId } = useParams();
@@ -94,14 +94,17 @@ export default function InvoiceDetail() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <button className="btn btn-primary animate-in" style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }} onClick={async () => {
-          const isNativeShared = await shareInvoice(invoice);
+          const captureEl = document.getElementById('receipt-capture');
+          if (!captureEl) return;
+          
+          const isNativeShared = await shareInvoiceAsImage(invoice, captureEl);
           if (!isNativeShared) {
-            if (confirm('Đã copy nội dung hóa đơn! Bạn có muốn mở Zalo để dán không?')) {
+            if (confirm('Đã tải ảnh hóa đơn xuống máy! Bạn có muốn mở Zalo để gửi không?')) {
               window.open('https://zalo.me', '_blank');
             }
           }
         }}>
-          <Share2 size={18} /> Gửi qua Zalo/Tin nhắn
+          <Share2 size={18} /> Gửi Ảnh qua Zalo
         </button>
 
         <button className="btn btn-primary animate-in" onClick={async () => {
@@ -124,6 +127,13 @@ export default function InvoiceDetail() {
         <button className="btn btn-outline animate-in" onClick={() => { setShowReceipt(true); setTimeout(() => window.print(), 300); }}>
           <Printer size={18} /> In qua hệ thống (iOS / PC)
         </button>
+      </div>
+
+      {/* Offscreen receipt for html2canvas capture */}
+      <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+        <div id="receipt-capture" style={{ width: '400px', background: 'white' }}>
+          <Receipt data={invoice} />
+        </div>
       </div>
     </div>
   );
