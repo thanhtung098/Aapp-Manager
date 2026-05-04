@@ -16,9 +16,9 @@ export default function Receipt({ data }) {
       margin: '0',
       boxSizing: 'border-box'
     }}>
-      <h2 style={{ textAlign: 'center', fontSize: '18px', fontWeight: '900', marginBottom: '8px' }}>HÓA ĐƠN TIỀN PHÒNG</h2>
-      <div className="receipt-info" style={{ textAlign: 'center', fontSize: '12px', marginBottom: '12px', fontWeight: '600' }}>
-        <div>{data.address}</div>
+      <h2 style={{ textAlign: 'left', fontSize: '18px', fontWeight: '900', marginBottom: '8px' }}>HÓA ĐƠN TIỀN PHÒNG</h2>
+      <div className="receipt-info" style={{ textAlign: 'left', fontSize: '12px', marginBottom: '12px', fontWeight: '600' }}>
+        {/* <div>{data.address}</div> */}
         <div>ĐT: {data.landlordPhone}</div>
       </div>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
@@ -50,10 +50,10 @@ export default function Receipt({ data }) {
         </tbody>
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
-      <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'center', margin: '12px 0' }}>TỔNG: {formatVND(data.total)}</div>
-      <div style={{ textAlign: 'center', fontSize: '12px', marginTop: '16px', fontWeight: '600' }}>
+      <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG: {formatVND(data.total)}</div>
+      <div style={{ textAlign: 'left', fontSize: '12px', marginTop: '16px', fontWeight: '600' }}>
         <div>Ngày in: {dateStr}</div>
-        <div>Chủ trọ: {data.landlordName}</div>
+        {/* <div>Chủ trọ: {data.landlordName}</div> */}
         <div style={{ marginTop: '8px' }}>Cảm ơn quý khách!</div>
       </div>
     </div>
