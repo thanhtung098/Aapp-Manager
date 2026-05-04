@@ -12,7 +12,7 @@ export default function Receipt({ data }) {
       color: 'black', 
       padding: '20px', 
       fontFamily: '"Courier New", Courier, monospace',
-      width: '400px',
+      width: '320px',
       margin: '0',
       boxSizing: 'border-box'
     }}>
