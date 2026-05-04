@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, Save } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Bluetooth } from 'lucide-react';
 import { api } from '../api';
+import { connectBluetoothPrinter, printTestReceipt } from '../utils/bluetoothPrinter';
 
 export default function Settings() {
   const [settings, setSettings] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [btStatus, setBtStatus] = useState('Chưa kết nối');
 
   useEffect(() => {
     api.getSettings().then(setSettings).catch(console.error);
@@ -16,6 +18,26 @@ export default function Settings() {
     await api.updateSettings(settings);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const handleConnectBT = async () => {
+    try {
+      setBtStatus('Đang kết nối...');
+      await connectBluetoothPrinter();
+      setBtStatus('Đã kết nối!');
+      alert('Kết nối máy in thành công!');
+    } catch (e) {
+      setBtStatus('Lỗi kết nối');
+      alert(e.message);
+    }
+  };
+
+  const handleTestPrint = async () => {
+    try {
+      await printTestReceipt();
+    } catch (e) {
+      alert('Chưa kết nối máy in hoặc máy in lỗi: ' + e.message);
+    }
   };
 
   if (!settings) return <div className="app-container"><p style={{ textAlign: 'center', paddingTop: 80, color: 'var(--text-muted)' }}>Đang tải...</p></div>;
@@ -60,6 +82,21 @@ export default function Settings() {
         <div className="form-group">
           <label>Địa chỉ</label>
           <input type="text" value={settings.address} onChange={e => update('address', e.target.value)} />
+        </div>
+      </div>
+
+      <div className="card animate-in">
+        <div className="card-title">🖨️ Máy in Bluetooth</div>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: 12 }}>
+          Trạng thái: <strong style={{ color: btStatus === 'Đã kết nối!' ? 'var(--success)' : 'inherit' }}>{btStatus}</strong>
+        </p>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn btn-outline" style={{ flex: 1 }} onClick={handleConnectBT}>
+            <Bluetooth size={18} /> Kết nối
+          </button>
+          <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleTestPrint} disabled={btStatus !== 'Đã kết nối!'}>
+            In thử
+          </button>
         </div>
       </div>
 

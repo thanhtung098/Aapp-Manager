@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calculator as CalcIcon, Printer, ArrowLeft } from 'lucide-react';
+import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Save, Share2 } from 'lucide-react';
 import { api } from '../api';
 import Receipt from '../components/Receipt';
+import { connectBluetoothPrinter, printInvoiceBluetooth } from '../utils/bluetoothPrinter';
+import { shareInvoice } from '../utils/share';
 
 export default function Calculator() {
   const { roomId } = useParams();
@@ -63,13 +65,60 @@ export default function Calculator() {
     });
   };
 
-  const saveAndPrint = async () => {
-    if (!result) return;
+  const saveInvoice = async () => {
+    if (!result) return null;
     try {
-      await api.createInvoice(result);
-    } catch (e) { console.error(e); }
+      const newInvoice = await api.createInvoice(result);
+      return newInvoice;
+    } catch (e) {
+      console.error(e);
+      alert('Lỗi khi lưu hóa đơn');
+      return null;
+    }
+  };
+
+  const handlePrintBT = async () => {
+    const saved = await saveInvoice();
+    if (!saved) return;
+    try {
+      await printInvoiceBluetooth(saved);
+      alert('Đã lưu và in thành công!');
+      navigate('/history');
+    } catch (e) {
+      if (e.message.includes('Chưa kết nối')) {
+        if (confirm('Chưa kết nối máy in Bluetooth. Kết nối ngay?')) {
+          await connectBluetoothPrinter();
+          await printInvoiceBluetooth(saved);
+          alert('Đã lưu và in thành công!');
+          navigate('/history');
+        }
+      } else {
+        alert(e.message);
+      }
+    }
+  };
+
+  const handlePrintSystem = async () => {
+    const saved = await saveInvoice();
+    if (!saved) return;
     setShowReceipt(true);
-    setTimeout(() => window.print(), 300);
+    setTimeout(() => {
+      window.print();
+      // After system print dialog closes, it's hard to auto-navigate gracefully, but we can try
+      setTimeout(() => navigate('/history'), 1000);
+    }, 300);
+  };
+
+  const handleShare = async () => {
+    const saved = await saveInvoice();
+    if (!saved) return;
+    const isNativeShared = await shareInvoice(saved);
+    if (!isNativeShared) {
+      if (confirm('Đã copy nội dung hóa đơn! Bạn có muốn mở Zalo để dán không?')) {
+        window.open('https://zalo.me', '_blank');
+      }
+    }
+    navigate('/history');
   };
 
   if (!room || !settings) {
@@ -181,9 +230,26 @@ export default function Calculator() {
               <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(result.total)}</td></tr>
             </tbody>
           </table>
-          <button className="btn btn-success" style={{ marginTop: 16 }} onClick={saveAndPrint}>
-            <Printer size={18} /> Lưu & In hóa đơn
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
+            <button className="btn btn-primary" onClick={handleShare} style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }}>
+              <Share2 size={18} /> Lưu & Gửi qua Zalo/Tin nhắn
+            </button>
+            <button className="btn btn-primary" onClick={handlePrintBT}>
+              <Bluetooth size={18} /> Lưu & In qua Bluetooth
+            </button>
+            <button className="btn btn-outline" onClick={handlePrintSystem}>
+              <Printer size={18} /> Lưu & In qua hệ thống
+            </button>
+            <button className="btn btn-success" onClick={async () => {
+              const saved = await saveInvoice();
+              if (saved) {
+                alert('Đã lưu hóa đơn!');
+                navigate('/history');
+              }
+            }}>
+              <Save size={18} /> Chỉ lưu (Không in)
+            </button>
+          </div>
         </div>
       )}
     </div>
