@@ -36,8 +36,29 @@ export default function Calculator() {
 
   const calculate = () => {
     if (!settings || !room) return;
-    const elecUsage = Number(form.newElec) - Number(form.oldElec);
-    const waterUsage = Number(form.newWater) - Number(form.oldWater);
+    
+    if (form.oldElec === '' || form.newElec === '' || form.oldWater === '' || form.newWater === '') {
+      alert('Vui lòng nhập đầy đủ chỉ số Điện và Nước (nếu không dùng thì nhập 0)!');
+      return;
+    }
+
+    const oldE = Number(form.oldElec);
+    const newE = Number(form.newElec);
+    const oldW = Number(form.oldWater);
+    const newW = Number(form.newWater);
+
+    if (newE < oldE) {
+      alert('Lỗi: Số điện mới phải lớn hơn hoặc bằng số điện cũ!');
+      return;
+    }
+    
+    if (newW < oldW) {
+      alert('Lỗi: Số nước mới phải lớn hơn hoặc bằng số nước cũ!');
+      return;
+    }
+
+    const elecUsage = newE - oldE;
+    const waterUsage = newW - oldW;
     
     const activeElecPrice = room.electricityPrice ?? settings.electricityPrice;
     const activeWaterPrice = room.waterPrice ?? settings.waterPrice;
@@ -181,10 +202,16 @@ export default function Calculator() {
             <input type="number" placeholder="0" value={form.newElec} onChange={e => update('newElec', e.target.value)} />
           </div>
         </div>
-        {form.oldElec && form.newElec && (
-          <div style={{ fontSize: '0.85rem', color: 'var(--accent-light)', marginTop: 4 }}>
-            Tiêu thụ: <strong>{Number(form.newElec) - Number(form.oldElec)} kWh</strong> × {formatVND(room.electricityPrice ?? settings.electricityPrice)}
-          </div>
+        {form.oldElec !== '' && form.newElec !== '' && (
+          Number(form.newElec) < Number(form.oldElec) ? (
+            <div style={{ fontSize: '0.85rem', color: 'var(--danger)', marginTop: 4 }}>
+              Số mới không được nhỏ hơn số cũ!
+            </div>
+          ) : (
+            <div style={{ fontSize: '0.85rem', color: 'var(--accent-light)', marginTop: 4 }}>
+              Tiêu thụ: <strong>{Number(form.newElec) - Number(form.oldElec)} kWh</strong> × {formatVND(room.electricityPrice ?? settings.electricityPrice)}
+            </div>
+          )
         )}
       </div>
 
@@ -201,10 +228,16 @@ export default function Calculator() {
             <input type="number" placeholder="0" value={form.newWater} onChange={e => update('newWater', e.target.value)} />
           </div>
         </div>
-        {form.oldWater && form.newWater && (
-          <div style={{ fontSize: '0.85rem', color: 'var(--success)', marginTop: 4 }}>
-            Tiêu thụ: <strong>{Number(form.newWater) - Number(form.oldWater)} m³</strong> × {formatVND(room.waterPrice ?? settings.waterPrice)}
-          </div>
+        {form.oldWater !== '' && form.newWater !== '' && (
+          Number(form.newWater) < Number(form.oldWater) ? (
+            <div style={{ fontSize: '0.85rem', color: 'var(--danger)', marginTop: 4 }}>
+              Số mới không được nhỏ hơn số cũ!
+            </div>
+          ) : (
+            <div style={{ fontSize: '0.85rem', color: 'var(--success)', marginTop: 4 }}>
+              Tiêu thụ: <strong>{Number(form.newWater) - Number(form.oldWater)} m³</strong> × {formatVND(room.waterPrice ?? settings.waterPrice)}
+            </div>
+          )
         )}
       </div>
 
