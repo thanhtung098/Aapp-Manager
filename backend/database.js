@@ -14,9 +14,9 @@ function getDefaultData() {
     ],
     invoices: [],
     settings: {
-      electricityPrice: 3500, // VND per kWh
-      waterPrice: 15000,      // VND per m3
-      trashFee: 20000,        // VND per month
+      electricityPrice: 4000, // VND per kWh
+      waterPrice: 20000,      // VND per m3
+      trashFee: 15000,        // VND per month
       internetFee: 100000,    // VND per month
       landlordName: 'Chủ Trọ',
       landlordPhone: '0901234567',
