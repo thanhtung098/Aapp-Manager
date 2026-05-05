@@ -23,9 +23,9 @@
   ],
   "invoices": [],
   "settings": {
-    "electricityPrice": 3500,
-    "waterPrice": 15000,
-    "trashFee": 20000,
+    "electricityPrice": 4000,
+    "waterPrice": 20000,
+    "trashFee": 15000,
     "internetFee": 0,
     "landlordName": "Chủ Trọ",
     "landlordPhone": "0901234567",
