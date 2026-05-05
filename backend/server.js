@@ -18,9 +18,17 @@ app.get('/api/rooms', (req, res) => {
 // ─── ADD a room ─────────────────────────────────────────────────
 app.post('/api/rooms', (req, res) => {
   const data = loadData();
-  const { name, price } = req.body;
+  const { name, price, electricityPrice, waterPrice, trashFee, internetFee } = req.body;
   const newId = data.rooms.length > 0 ? Math.max(...data.rooms.map(r => r.id)) + 1 : 1;
-  const room = { id: newId, name, price: Number(price) };
+  const room = { 
+    id: newId, 
+    name, 
+    price: Number(price),
+    electricityPrice: electricityPrice !== undefined ? Number(electricityPrice) : null,
+    waterPrice: waterPrice !== undefined ? Number(waterPrice) : null,
+    trashFee: trashFee !== undefined ? Number(trashFee) : null,
+    internetFee: internetFee !== undefined ? Number(internetFee) : null
+  };
   data.rooms.push(room);
   saveData(data);
   res.status(201).json(room);

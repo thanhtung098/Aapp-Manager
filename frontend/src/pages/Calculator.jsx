@@ -38,11 +38,17 @@ export default function Calculator() {
     if (!settings || !room) return;
     const elecUsage = Number(form.newElec) - Number(form.oldElec);
     const waterUsage = Number(form.newWater) - Number(form.oldWater);
-    const elecCost = elecUsage * settings.electricityPrice;
-    const waterCost = waterUsage * settings.waterPrice;
+    
+    const activeElecPrice = room.electricityPrice ?? settings.electricityPrice;
+    const activeWaterPrice = room.waterPrice ?? settings.waterPrice;
+    const activeTrashFee = room.trashFee ?? settings.trashFee;
+    const activeInternetFee = room.internetFee ?? settings.internetFee;
+
+    const elecCost = elecUsage * activeElecPrice;
+    const waterCost = waterUsage * activeWaterPrice;
     const other = Number(form.otherFee) || 0;
 
-    const total = room.price + elecCost + waterCost + settings.trashFee + settings.internetFee + other;
+    const total = room.price + elecCost + waterCost + activeTrashFee + activeInternetFee + other;
 
     setResult({
       roomName: room.name,
@@ -50,12 +56,12 @@ export default function Calculator() {
       month: form.month,
       oldElec: Number(form.oldElec),
       newElec: Number(form.newElec),
-      elecUsage, elecPrice: settings.electricityPrice, elecCost,
+      elecUsage, elecPrice: activeElecPrice, elecCost,
       oldWater: Number(form.oldWater),
       newWater: Number(form.newWater),
-      waterUsage, waterPrice: settings.waterPrice, waterCost,
-      trashFee: settings.trashFee,
-      internetFee: settings.internetFee,
+      waterUsage, waterPrice: activeWaterPrice, waterCost,
+      trashFee: activeTrashFee,
+      internetFee: activeInternetFee,
       otherFee: other,
       otherNote: form.otherNote,
       total,
@@ -177,7 +183,7 @@ export default function Calculator() {
         </div>
         {form.oldElec && form.newElec && (
           <div style={{ fontSize: '0.85rem', color: 'var(--accent-light)', marginTop: 4 }}>
-            Tiêu thụ: <strong>{Number(form.newElec) - Number(form.oldElec)} kWh</strong> × {formatVND(settings.electricityPrice)}
+            Tiêu thụ: <strong>{Number(form.newElec) - Number(form.oldElec)} kWh</strong> × {formatVND(room.electricityPrice ?? settings.electricityPrice)}
           </div>
         )}
       </div>
@@ -197,7 +203,7 @@ export default function Calculator() {
         </div>
         {form.oldWater && form.newWater && (
           <div style={{ fontSize: '0.85rem', color: 'var(--success)', marginTop: 4 }}>
-            Tiêu thụ: <strong>{Number(form.newWater) - Number(form.oldWater)} m³</strong> × {formatVND(settings.waterPrice)}
+            Tiêu thụ: <strong>{Number(form.newWater) - Number(form.oldWater)} m³</strong> × {formatVND(room.waterPrice ?? settings.waterPrice)}
           </div>
         )}
       </div>
