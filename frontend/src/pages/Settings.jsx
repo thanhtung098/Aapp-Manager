@@ -40,7 +40,14 @@ export default function Settings() {
     }
   };
 
-  if (!settings) return <div className="app-container"><p style={{ textAlign: 'center', paddingTop: 80, color: 'var(--text-muted)' }}>Đang tải...</p></div>;
+  if (!settings) {
+    return (
+      <div className="app-container loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">ĐANG TẢI...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">

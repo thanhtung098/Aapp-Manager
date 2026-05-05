@@ -10,11 +10,20 @@ export default function History() {
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [printingInvoices, setPrintingInvoices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.getInvoices().then(list => setInvoices(list.reverse())).catch(console.error);
+    api.getInvoices()
+      .then(list => {
+        setInvoices(list.reverse());
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsLoading(false);
+      });
   }, []);
 
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
@@ -111,6 +120,15 @@ export default function History() {
             <Receipt key={inv.id} data={inv} />
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="app-container loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">ĐANG TẢI...</div>
       </div>
     );
   }

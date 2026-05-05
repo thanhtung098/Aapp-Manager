@@ -19,7 +19,12 @@ export default function InvoiceDetail() {
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 
   if (!invoice) {
-    return <div className="app-container"><p style={{ textAlign: 'center', paddingTop: 80, color: 'var(--text-muted)' }}>Đang tải...</p></div>;
+    return (
+      <div className="app-container loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">ĐANG TẢI...</div>
+      </div>
+    );
   }
 
   if (showReceipt) {

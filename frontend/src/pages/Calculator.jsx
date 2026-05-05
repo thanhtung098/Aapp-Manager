@@ -11,6 +11,7 @@ export default function Calculator() {
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [settings, setSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [form, setForm] = useState({
     oldElec: '', newElec: '',
     oldWater: '', newWater: '',
@@ -26,8 +27,12 @@ export default function Calculator() {
         const found = rooms.find(r => r.id === Number(roomId));
         setRoom(found);
         setSettings(s);
+        setIsLoading(false);
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setIsLoading(false);
+      });
   }, [roomId]);
 
   const update = (key, val) => setForm({ ...form, [key]: val });
@@ -145,8 +150,13 @@ export default function Calculator() {
     navigate('/history');
   };
 
-  if (!room || !settings) {
-    return <div className="app-container"><p style={{ textAlign: 'center', paddingTop: 80, color: 'var(--text-muted)' }}>Đang tải...</p></div>;
+  if (isLoading || !room || !settings) {
+    return (
+      <div className="app-container loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">ĐANG TẢI...</div>
+      </div>
+    );
   }
 
   if (showReceipt) {

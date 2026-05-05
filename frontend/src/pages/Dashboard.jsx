@@ -6,6 +6,7 @@ import { api } from '../api';
 export default function Dashboard() {
   const [rooms, setRooms] = useState([]);
   const [settings, setSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   const [modalOpen, setModalOpen] = useState(false);
   const [editingRoom, setEditingRoom] = useState(null);
@@ -20,8 +21,12 @@ export default function Dashboard() {
       .then(([r, s]) => {
         setRooms(r);
         setSettings(s);
+        setIsLoading(false);
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+        setIsLoading(false);
+      });
   }, []);
 
   const openAddModal = () => {
@@ -84,6 +89,15 @@ export default function Dashboard() {
   };
 
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+
+  if (isLoading) {
+    return (
+      <div className="app-container loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">ĐANG TẢI...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
