@@ -126,7 +126,7 @@ function formatLineLR(left, right, width = 32) {
   return leftClean + ' ' + rightClean;
 }
 
-export async function printInvoiceBluetooth(invoice, settings) {
+function buildInvoiceCommands(invoice) {
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'd';
   
   const cmds = [
@@ -173,7 +173,7 @@ export async function printInvoiceBluetooth(invoice, settings) {
     ...textToBuffer('\n\n')
   );
 
-  // Footer
+  // Footer (contains 5 newlines for tear-off)
   cmds.push(
     ESC, 0x61, 0x01, // Center align
     ...textToBuffer('Cam on quy khach!\n'),
@@ -181,5 +181,18 @@ export async function printInvoiceBluetooth(invoice, settings) {
     ...textToBuffer('Phan mem quan ly nha tro\n\n\n\n\n')
   );
 
+  return cmds;
+}
+
+export async function printInvoiceBluetooth(invoice) {
+  const cmds = buildInvoiceCommands(invoice);
   await sendCommand(new Uint8Array(cmds));
+}
+
+export async function printMultipleInvoicesBluetooth(invoices) {
+  const allCmds = [];
+  for (const inv of invoices) {
+    allCmds.push(...buildInvoiceCommands(inv));
+  }
+  await sendCommand(new Uint8Array(allCmds));
 }
