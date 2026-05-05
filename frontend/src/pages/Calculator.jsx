@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Share2, Trash2 } from 'lucide-react';
+import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Share2, Trash2, X } from 'lucide-react';
 import { api } from '../api';
 import Receipt from '../components/Receipt';
 import { connectBluetoothPrinter, printInvoiceBluetooth } from '../utils/bluetoothPrinter';
@@ -251,43 +251,59 @@ export default function Calculator() {
         <CalcIcon size={18} /> Tính tiền
       </button>
 
-      {/* Result */}
+      {/* Result Modal */}
       {result && (
-        <div className="card animate-in" style={{ marginTop: 16 }}>
-          <div className="card-title">💰 Tổng kết</div>
-          <table className="summary-table">
-            <tbody>
-              <tr><td>Tiền phòng</td><td>{formatVND(result.roomPrice)}</td></tr>
-              <tr><td>Tiền điện ({result.elecUsage} kWh)</td><td>{formatVND(result.elecCost)}</td></tr>
-              <tr><td>Tiền nước ({result.waterUsage} m³)</td><td>{formatVND(result.waterCost)}</td></tr>
-              <tr><td>Rác</td><td>{formatVND(result.trashFee)}</td></tr>
-              <tr><td>Internet</td><td>{formatVND(result.internetFee)}</td></tr>
-              {result.otherFee > 0 && <tr><td>{result.otherNote || 'Khác'}</td><td>{formatVND(result.otherFee)}</td></tr>}
-              <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(result.total)}</td></tr>
-            </tbody>
-          </table>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-            <button className="btn btn-primary" onClick={handleShare} style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }}>
-              <Share2 size={18} /> Gửi Ảnh qua Zalo
-            </button>
-            <button className="btn btn-primary" onClick={handlePrintBT}>
-              <Bluetooth size={18} /> In qua Bluetooth
-            </button>
-            <button className="btn btn-outline" onClick={handlePrintSystem}>
-              <Printer size={18} /> In qua hệ thống
-            </button>
-            <button 
-              className="btn btn-danger" 
-              onClick={async () => {
-                if (confirm('Bạn chắc chắn muốn xóa hóa đơn vừa tạo?')) {
-                  await api.deleteInvoice(result.id);
-                  setResult(null);
-                  alert('Đã xóa hóa đơn!');
-                }
-              }}
-            >
-              <Trash2 size={18} /> Xóa hóa đơn (Làm lại)
-            </button>
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="modal-header">
+              <h2>💰 Tổng kết hóa đơn</h2>
+              <button className="modal-close" onClick={() => {
+                // They close the modal without deleting -> it's already saved, so let's go to history
+                navigate('/history');
+              }}>
+                <X size={20} />
+              </button>
+            </div>
+            
+            <table className="summary-table">
+              <tbody>
+                <tr><td>Tiền phòng</td><td>{formatVND(result.roomPrice)}</td></tr>
+                <tr><td>Tiền điện ({result.elecUsage} kWh)</td><td>{formatVND(result.elecCost)}</td></tr>
+                <tr><td>Tiền nước ({result.waterUsage} m³)</td><td>{formatVND(result.waterCost)}</td></tr>
+                <tr><td>Rác</td><td>{formatVND(result.trashFee)}</td></tr>
+                <tr><td>Internet</td><td>{formatVND(result.internetFee)}</td></tr>
+                {result.otherFee > 0 && <tr><td>{result.otherNote || 'Khác'}</td><td>{formatVND(result.otherFee)}</td></tr>}
+                <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(result.total)}</td></tr>
+              </tbody>
+            </table>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 24 }}>
+              <button className="btn btn-primary" onClick={handleShare} style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }}>
+                <Share2 size={18} /> Gửi Ảnh qua Zalo
+              </button>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button className="btn btn-primary" style={{ flex: 1 }} onClick={handlePrintBT}>
+                  <Bluetooth size={18} /> In Bluetooth
+                </button>
+                <button className="btn btn-outline" style={{ flex: 1 }} onClick={handlePrintSystem}>
+                  <Printer size={18} /> In hệ thống
+                </button>
+              </div>
+              
+              <button 
+                className="btn btn-danger" 
+                style={{ marginTop: 8 }}
+                onClick={async () => {
+                  if (confirm('Bạn chắc chắn muốn xóa hóa đơn vừa tạo?')) {
+                    await api.deleteInvoice(result.id);
+                    setResult(null);
+                    alert('Đã xóa hóa đơn!');
+                  }
+                }}
+              >
+                <Trash2 size={18} /> Xóa hóa đơn (Làm lại)
+              </button>
+            </div>
           </div>
         </div>
       )}
