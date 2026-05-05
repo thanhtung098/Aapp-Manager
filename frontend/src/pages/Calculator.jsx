@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Save, Share2 } from 'lucide-react';
+import { Calculator as CalcIcon, Printer, ArrowLeft, Bluetooth, Share2, Trash2 } from 'lucide-react';
 import { api } from '../api';
 import Receipt from '../components/Receipt';
 import { connectBluetoothPrinter, printInvoiceBluetooth } from '../utils/bluetoothPrinter';
@@ -34,7 +34,7 @@ export default function Calculator() {
 
   const formatVND = (n) => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 
-  const calculate = () => {
+  const calculate = async () => {
     if (!settings || !room) return;
     
     if (form.oldElec === '' || form.newElec === '' || form.oldWater === '' || form.newWater === '') {
@@ -71,7 +71,7 @@ export default function Calculator() {
 
     const total = room.price + elecCost + waterCost + activeTrashFee + activeInternetFee + other;
 
-    setResult({
+    const payload = {
       roomName: room.name,
       roomPrice: room.price,
       month: form.month,
@@ -89,34 +89,30 @@ export default function Calculator() {
       landlordName: settings.landlordName,
       landlordPhone: settings.landlordPhone,
       address: settings.address,
-    });
-  };
+    };
 
-  const saveInvoice = async () => {
-    if (!result) return null;
     try {
-      const newInvoice = await api.createInvoice(result);
-      return newInvoice;
+      const saved = await api.createInvoice(payload);
+      setResult(saved);
+      alert('Đã tính và tự động lưu hóa đơn!');
     } catch (e) {
       console.error(e);
-      alert('Lỗi khi lưu hóa đơn');
-      return null;
+      alert('Lỗi khi tự động lưu hóa đơn');
     }
   };
 
   const handlePrintBT = async () => {
-    const saved = await saveInvoice();
-    if (!saved) return;
+    if (!result) return;
     try {
-      await printInvoiceBluetooth(saved);
-      alert('Đã lưu và in thành công!');
+      await printInvoiceBluetooth(result);
+      alert('Đã in thành công!');
       navigate('/history');
     } catch (e) {
       if (e.message.includes('Chưa kết nối')) {
         if (confirm('Chưa kết nối máy in Bluetooth. Kết nối ngay?')) {
           await connectBluetoothPrinter();
-          await printInvoiceBluetooth(saved);
-          alert('Đã lưu và in thành công!');
+          await printInvoiceBluetooth(result);
+          alert('Đã in thành công!');
           navigate('/history');
         }
       } else {
@@ -126,25 +122,21 @@ export default function Calculator() {
   };
 
   const handlePrintSystem = async () => {
-    const saved = await saveInvoice();
-    if (!saved) return;
+    if (!result) return;
     setShowReceipt(true);
     setTimeout(() => {
       window.print();
-      // After system print dialog closes, it's hard to auto-navigate gracefully, but we can try
       setTimeout(() => navigate('/history'), 1000);
     }, 300);
   };
 
   const handleShare = async () => {
-    const saved = await saveInvoice();
-    if (!saved) return;
+    if (!result) return;
     
-    // Get the offscreen receipt element
     const captureEl = document.getElementById('receipt-capture');
     if (!captureEl) return;
     
-    const isNativeShared = await shareInvoiceAsImage(saved, captureEl);
+    const isNativeShared = await shareInvoiceAsImage(result, captureEl);
     if (!isNativeShared) {
       if (confirm('Đã tải ảnh hóa đơn xuống máy! Bạn có muốn mở Zalo để gửi không?')) {
         window.open('https://zalo.me', '_blank');
@@ -276,22 +268,25 @@ export default function Calculator() {
           </table>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
             <button className="btn btn-primary" onClick={handleShare} style={{ background: '#0068FF', color: 'white', borderColor: '#0068FF' }}>
-              <Share2 size={18} /> Lưu & Gửi Ảnh qua Zalo
+              <Share2 size={18} /> Gửi Ảnh qua Zalo
             </button>
             <button className="btn btn-primary" onClick={handlePrintBT}>
-              <Bluetooth size={18} /> Lưu & In qua Bluetooth
+              <Bluetooth size={18} /> In qua Bluetooth
             </button>
             <button className="btn btn-outline" onClick={handlePrintSystem}>
-              <Printer size={18} /> Lưu & In qua hệ thống
+              <Printer size={18} /> In qua hệ thống
             </button>
-            <button className="btn btn-success" onClick={async () => {
-              const saved = await saveInvoice();
-              if (saved) {
-                alert('Đã lưu hóa đơn!');
-                navigate('/history');
-              }
-            }}>
-              <Save size={18} /> Chỉ lưu (Không in)
+            <button 
+              className="btn btn-danger" 
+              onClick={async () => {
+                if (confirm('Bạn chắc chắn muốn xóa hóa đơn vừa tạo?')) {
+                  await api.deleteInvoice(result.id);
+                  setResult(null);
+                  alert('Đã xóa hóa đơn!');
+                }
+              }}
+            >
+              <Trash2 size={18} /> Xóa hóa đơn (Làm lại)
             </button>
           </div>
         </div>
