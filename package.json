@@ -9,5 +9,12 @@
   "scripts": {
     "start": "node backend/server.js",
     "build": "npm install && npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "express-rate-limit": "^8.5.1",
+    "helmet": "^8.1.0"
   }
 }
