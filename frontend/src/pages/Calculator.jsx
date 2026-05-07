@@ -17,6 +17,7 @@ export default function Calculator() {
     oldWater: '', newWater: '',
     otherFee: '0', otherNote: '',
     month: new Date().toISOString().slice(0, 7),
+    invoiceDate: '',
   });
   const [result, setResult] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
@@ -80,6 +81,7 @@ export default function Calculator() {
       roomName: room.name,
       roomPrice: room.price,
       month: form.month,
+      invoiceDate: form.invoiceDate || new Date().toISOString().slice(0, 10),
       oldElec: Number(form.oldElec),
       newElec: Number(form.newElec),
       elecUsage, elecPrice: activeElecPrice, elecCost,
@@ -185,10 +187,19 @@ export default function Calculator() {
         <p>Tháng {form.month}</p>
       </div>
 
-      {/* Month */}
+      {/* Time */}
       <div className="card animate-in">
-        <div className="card-title">📅 Tháng tính tiền</div>
-        <input type="month" value={form.month} onChange={e => update('month', e.target.value)} />
+        <div className="card-title">📅 Thời gian</div>
+        <div className="form-row">
+          <div className="form-group">
+            <label>Tháng hóa đơn</label>
+            <input type="month" value={form.month} onChange={e => update('month', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label>Ngày in/lập HĐ</label>
+            <input type="date" value={form.invoiceDate} onChange={e => update('invoiceDate', e.target.value)} />
+          </div>
+        </div>
       </div>
 
       {/* Electricity */}
