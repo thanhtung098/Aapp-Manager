@@ -25,8 +25,8 @@ export default function Receipt({ data }) {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
         <tbody>
           <tr>
-            <td style={{ padding: '4px 0', fontWeight: '800' }}>{data.roomName}</td>
-            <td style={{ padding: '4px 0', textAlign: 'right', fontWeight: '800' }}>Tháng {data.month}</td>
+            <td style={{ padding: '4px 0', fontWeight: '800', textAlign: 'left' }}>{data.roomName}</td>
+            <td style={{ padding: '4px 0', textAlign: 'left', fontWeight: '800' }}> - Tháng {data.month}</td>
           </tr>
         </tbody>
       </table>
@@ -34,50 +34,51 @@ export default function Receipt({ data }) {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontWeight: '600' }}>
         <tbody>
           <tr>
-            <td style={{ padding: '4px 0', fontWeight: 'bold' }}>Tiền phòng</td>
-            <td style={{ padding: '4px 0', textAlign: 'right' }}>{formatVND(data.roomPrice)}</td>
+            <td colSpan="2" style={{ padding: '4px 0' }}>
+              <span style={{ fontWeight: 'bold' }}>Tiền phòng: </span>
+              <span>{formatVND(data.roomPrice)}</span>
+            </td>
           </tr>
 
           <tr>
-            <td style={{ padding: '4px 0' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền điện</div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal' }}>
-                {data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {data.elecPrice}
-              </div>
-            </td>
-            <td style={{ padding: '4px 0', textAlign: 'right', verticalAlign: 'top' }}>
-              = {formatVND(data.elecCost)}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ padding: '4px 0', textAlign: 'right' }}>{formatVND(data.elecCost)}</td>
-          </tr>
-          <tr>
-            <td style={{ padding: '4px 0' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền nước</div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal' }}>
-                {data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {data.waterPrice}
+            <td colSpan="2" style={{ padding: '4px 0' }}>
+              <div style={{ fontWeight: 'bold' }}>Tiền điện: {formatVND(data.elecCost)}</div>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#444' }}>
+                ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {data.elecPrice})
               </div>
             </td>
           </tr>
+
           <tr>
-            <td style={{ padding: '4px 0', textAlign: 'right' }}>={formatVND(data.waterCost)}</td>
+            <td colSpan="2" style={{ padding: '4px 0' }}>
+              <div style={{ fontWeight: 'bold' }}>Tiền nước: {formatVND(data.waterCost)}</div>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#444' }}>
+                ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {data.waterPrice})
+              </div>
+            </td>
           </tr>
+
           <tr>
-            <td style={{ padding: '4px 0', fontWeight: 'bold' }}>Rác</td>
-            <td style={{ padding: '4px 0', textAlign: 'right' }}>{formatVND(data.trashFee)}</td>
+            <td colSpan="2" style={{ padding: '4px 0' }}>
+              <span style={{ fontWeight: 'bold' }}>Rác: </span>
+              <span>{formatVND(data.trashFee)}</span>
+            </td>
           </tr>
-          {/* <tr><td style={{ padding: '4px 0' }}>Internet</td><td style={{ padding: '4px 0', textAlign: 'right' }}>{formatVND(data.internetFee)}</td></tr> */}
+
           {data.otherFee > 0 && (
-            <tr><td style={{ padding: '4px 0' }}>{data.otherNote || 'Khác'}</td><td style={{ padding: '4px 0', textAlign: 'right' }}>{formatVND(data.otherFee)}</td></tr>
+            <tr>
+              <td colSpan="2" style={{ padding: '4px 0' }}>
+                <span style={{ fontWeight: 'bold' }}>{data.otherNote || 'Khác'}: </span>
+                <span>{formatVND(data.otherFee)}</span>
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
-      <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG: {formatVND(data.total)}</div>
+      <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG CỘNG: {formatVND(data.total)}</div>
       <div style={{ textAlign: 'left', fontSize: '12px', marginTop: '16px', fontWeight: '600' }}>
         <div>Ngày in: {dateStr}</div>
-        {/* <div>Chủ trọ: {data.landlordName}</div> */}
         <div style={{ marginTop: '8px' }}>Cảm ơn quý khách!</div>
       </div>
     </div>
