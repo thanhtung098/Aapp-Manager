@@ -32,7 +32,7 @@ export default function Receipt({ data }) {
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontWeight: '600' }}>
-        <tbody>
+        {/* <tbody>
           <tr>
             <td colSpan="2" style={{ padding: '4px 0' }}>
               <span style={{ fontWeight: 'bold' }}>Tiền phòng: </span>
@@ -73,7 +73,7 @@ export default function Receipt({ data }) {
               </td>
             </tr>
           )}
-        </tbody>
+        </tbody> */}
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
       <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG CỘNG: {formatVND(data.total)}</div>
