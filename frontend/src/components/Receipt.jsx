@@ -32,48 +32,48 @@ export default function Receipt({ data }) {
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontWeight: '600' }}>
-        {/* <tbody>
+        <tbody>
           <tr>
-            <td colSpan="2" style={{ padding: '4px 0' }}>
+            <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
               <span style={{ fontWeight: 'bold' }}>Tiền phòng: </span>
-              <span>{formatVND(data.roomPrice)}</span>
+              <span style={{ float: 'right' }}>{formatVND(data.roomPrice)}</span>
             </td>
           </tr>
 
           <tr>
-            <td colSpan="2" style={{ padding: '4px 0' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền điện: {formatVND(data.elecCost)}</div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#444' }}>
-                ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {data.elecPrice})
+            <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
+              <div style={{ fontWeight: 'bold' }}>Tiền điện: <span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#666', marginTop: '2px' }}>
+                ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)})
               </div>
             </td>
           </tr>
 
           <tr>
-            <td colSpan="2" style={{ padding: '4px 0' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền nước: {formatVND(data.waterCost)}</div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#444' }}>
-                ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {data.waterPrice})
+            <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
+              <div style={{ fontWeight: 'bold' }}>Tiền nước: <span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#666', marginTop: '2px' }}>
+                ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)})
               </div>
             </td>
           </tr>
 
           <tr>
-            <td colSpan="2" style={{ padding: '4px 0' }}>
+            <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
               <span style={{ fontWeight: 'bold' }}>Rác: </span>
-              <span>{formatVND(data.trashFee)}</span>
+              <span style={{ float: 'right' }}>{formatVND(data.trashFee)}</span>
             </td>
           </tr>
 
           {data.otherFee > 0 && (
             <tr>
-              <td colSpan="2" style={{ padding: '4px 0' }}>
+              <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
                 <span style={{ fontWeight: 'bold' }}>{data.otherNote || 'Khác'}: </span>
-                <span>{formatVND(data.otherFee)}</span>
+                <span style={{ float: 'right' }}>{formatVND(data.otherFee)}</span>
               </td>
             </tr>
           )}
-        </tbody> */}
+        </tbody>
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
       <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG CỘNG: {formatVND(data.total)}</div>
