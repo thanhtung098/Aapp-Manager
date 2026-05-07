@@ -43,7 +43,7 @@ export default function Receipt({ data }) {
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
               <div style={{ fontWeight: 'bold' }}>Tiền điện: <span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#666', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#000', marginTop: '2px' }}>
                 ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)})
               </div>
             </td>
@@ -52,7 +52,7 @@ export default function Receipt({ data }) {
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
               <div style={{ fontWeight: 'bold' }}>Tiền nước: <span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#666', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#00000', marginTop: '2px' }}>
                 ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)})
               </div>
             </td>
