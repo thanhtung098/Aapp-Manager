@@ -6,17 +6,17 @@ export default function Receipt({ data }) {
   const dateStr = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
 
   return (
-    <div className="receipt" style={{ 
-      display: 'block', 
-      background: 'white', 
-      color: 'black', 
-      padding: '20px', 
+    <div className="receipt" style={{
+      display: 'block',
+      background: 'white',
+      color: 'black',
+      padding: '20px',
       fontFamily: '"Courier New", Courier, monospace',
       width: '320px',
       margin: '0',
       boxSizing: 'border-box'
     }}>
-      <h2 style={{ textAlign: 'left', fontSize: '18px', fontWeight: '900', marginBottom: '8px' }}>HÓA ĐƠN TIỀN PHÒNG</h2>
+      <h2 style={{ textAlign: 'left', fontSize: '18px', fontWeight: '900', marginBottom: '8px' }}>HÓA ĐƠN</h2>
       <div className="receipt-info" style={{ textAlign: 'left', fontSize: '12px', marginBottom: '12px', fontWeight: '600' }}>
         {/* <div>{data.address}</div> */}
         {/* <div>ĐT: {data.landlordPhone}</div> */}

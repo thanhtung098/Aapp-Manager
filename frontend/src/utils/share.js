@@ -50,7 +50,7 @@ export async function shareInvoiceAsImage(invoice, domElement) {
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: `Hóa đơn phòng ${invoice.roomName}`,
+        title: `Phòng ${invoice.roomName}`,
       });
       return true;
     } else {
