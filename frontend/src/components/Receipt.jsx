@@ -44,7 +44,7 @@ export default function Receipt({ data }) {
 
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <div style={{ fontWeight: 'bold', float: 'left' }}>Tiền điện: <span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
+              <div><span style={{ fontWeight: 'bold', float: 'left' }}>Tiền điện: </span><span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
               <div style={{ fontSize: '11px', float: 'left', fontWeight: 'normal', color: '#000', marginTop: '2px' }}>
                 ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)})
               </div>
@@ -53,7 +53,7 @@ export default function Receipt({ data }) {
 
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <div style={{ fontWeight: 'bold', float: 'left' }}>Tiền nước: <span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
+              <div><span style={{ fontWeight: 'bold', float: 'left' }}>Tiền nước: </span><span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
               <div style={{ fontSize: '11px', float: 'left', fontWeight: 'normal', color: '#00000', marginTop: '2px' }}>
                 ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)})
               </div>
