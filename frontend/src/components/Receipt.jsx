@@ -26,7 +26,9 @@ export default function Receipt({ data }) {
         <tbody>
           <tr>
             <td style={{ padding: '4px 0', fontWeight: '800', textAlign: 'left' }}>{data.roomName}</td>
-            <td style={{ padding: '4px 0', textAlign: 'left', fontWeight: '800' }}> - Tháng {data.month}</td>
+            {/* <td style={{ padding: '4px 0', textAlign: 'left', fontWeight: '800' }}> Tháng {data.month}</td> */}
+            <td style={{ padding: '4px 0', textAlign: 'right', fontWeight: '800' }}> Ngày: {dateStr}</td>
+
           </tr>
         </tbody>
       </table>
@@ -35,15 +37,15 @@ export default function Receipt({ data }) {
         <tbody>
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <span style={{ fontWeight: 'bold' }}>Tiền phòng: </span>
+              <span style={{ fontWeight: 'bold', float: 'left' }}>Tiền phòng: </span>
               <span style={{ float: 'right' }}>{formatVND(data.roomPrice)}</span>
             </td>
           </tr>
 
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền điện: <span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#000', marginTop: '2px' }}>
+              <div style={{ fontWeight: 'bold', float: 'left' }}>Tiền điện: <span style={{ float: 'right' }}>{formatVND(data.elecCost)}</span></div>
+              <div style={{ fontSize: '11px', float: 'left', fontWeight: 'normal', color: '#000', marginTop: '2px' }}>
                 ({data.newElec} - {data.oldElec} = {data.elecUsage} kWh × {formatVND(data.elecPrice)})
               </div>
             </td>
@@ -51,8 +53,8 @@ export default function Receipt({ data }) {
 
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <div style={{ fontWeight: 'bold' }}>Tiền nước: <span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
-              <div style={{ fontSize: '11px', fontWeight: 'normal', color: '#00000', marginTop: '2px' }}>
+              <div style={{ fontWeight: 'bold', float: 'left' }}>Tiền nước: <span style={{ float: 'right' }}>{formatVND(data.waterCost)}</span></div>
+              <div style={{ fontSize: '11px', float: 'left', fontWeight: 'normal', color: '#00000', marginTop: '2px' }}>
                 ({data.newWater} - {data.oldWater} = {data.waterUsage} m³ × {formatVND(data.waterPrice)})
               </div>
             </td>
@@ -60,7 +62,7 @@ export default function Receipt({ data }) {
 
           <tr>
             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-              <span style={{ fontWeight: 'bold' }}>Rác: </span>
+              <span style={{ fontWeight: 'bold', float: 'left' }}>Rác: </span>
               <span style={{ float: 'right' }}>{formatVND(data.trashFee)}</span>
             </td>
           </tr>
@@ -68,7 +70,7 @@ export default function Receipt({ data }) {
           {data.otherFee > 0 && (
             <tr>
               <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-                <span style={{ fontWeight: 'bold' }}>{data.otherNote || 'Khác'}: </span>
+                <span style={{ fontWeight: 'bold', float: 'left' }}>{data.otherNote || 'Khác'}: </span>
                 <span style={{ float: 'right' }}>{formatVND(data.otherFee)}</span>
               </td>
             </tr>
@@ -77,7 +79,7 @@ export default function Receipt({ data }) {
             data.discountFee > 0 && (
               <tr>
                 <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-                  <span style={{ fontWeight: 'bold' }}>{data.discountNote}:</span>
+                  <span style={{ fontWeight: 'bold', float: 'left' }}>{data.discountNote}:</span>
                   <span style={{ float: 'right' }}>{data.discountFee > 0 ? `-${formatVND(data.discountFee)}` : '0đ'}</span>
                 </td>
               </tr>
@@ -96,7 +98,7 @@ export default function Receipt({ data }) {
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>
       <div style={{ fontSize: '18px', fontWeight: '900', textAlign: 'left', margin: '12px 0' }}>TỔNG CỘNG: {formatVND(data.total)}</div>
       <div style={{ textAlign: 'left', fontSize: '12px', marginTop: '16px', fontWeight: '600' }}>
-        <div>Ngày in: {dateStr}</div>
+        {/* <div>Ngày in: {dateStr}</div> */}
         <div style={{ marginTop: '8px' }}>Cảm ơn quý khách!</div>
       </div>
     </div>
