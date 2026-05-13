@@ -76,7 +76,7 @@ export default function Receipt({ data }) {
           {
             data.discountFee > 0 && (
               <tr>
-                <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc', color: data.discountFee > 0 ? '#e74c3c' : 'inherit' }}>
+                <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
                   <span style={{ fontWeight: 'bold' }}>{data.discountNote}</span>
                   <span style={{ float: 'right' }}>{data.discountFee > 0 ? `-${formatVND(data.discountFee)}` : '0đ'}</span>
                 </td>
