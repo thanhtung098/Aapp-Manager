@@ -16,6 +16,7 @@ export default function Calculator() {
     oldElec: '', newElec: '',
     oldWater: '', newWater: '',
     otherFee: '0', otherNote: '',
+    discountFee: '0', discountNote: '',
     month: new Date().toISOString().slice(0, 7),
     invoiceDate: '',
   });
@@ -71,11 +72,11 @@ export default function Calculator() {
     const activeTrashFee = room.trashFee ?? settings.trashFee;
     const activeInternetFee = room.internetFee ?? settings.internetFee;
 
-    const elecCost = elecUsage * activeElecPrice;
+const elecCost = elecUsage * activeElecPrice;
     const waterCost = waterUsage * activeWaterPrice;
     const other = Number(form.otherFee) || 0;
 
-    const total = room.price + elecCost + waterCost + activeTrashFee + activeInternetFee + other;
+    const total = room.price + elecCost + waterCost + activeTrashFee + activeInternetFee + other - Number(form.discountFee || 0);
 
     const payload = {
       roomName: room.name,
@@ -92,6 +93,8 @@ export default function Calculator() {
       internetFee: activeInternetFee,
       otherFee: other,
       otherNote: form.otherNote,
+      discountFee: Number(form.discountFee) || 0,
+      discountNote: form.discountNote,
       total,
       landlordName: settings.landlordName,
       landlordPhone: settings.landlordPhone,
@@ -254,18 +257,31 @@ export default function Calculator() {
         )}
       </div>
 
-      {/* Other fees */}
-      <div className="card animate-in">
-        <div className="card-title">📋 Chi phí khác</div>
-        <div className="form-group">
-          <label>Số tiền (VNĐ)</label>
-          <input type="number" placeholder="0" value={form.otherFee} onChange={e => update('otherFee', e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label>Ghi chú</label>
-          <input type="text" placeholder="VD: Sửa vòi nước..." value={form.otherNote} onChange={e => update('otherNote', e.target.value)} />
-        </div>
-      </div>
+{/* Other fees */}
+       <div className="card animate-in">
+         <div className="card-title">📋 Chi phí khác</div>
+         <div className="form-group">
+           <label>Số tiền (VNĐ)</label>
+           <input type="number" placeholder="0" value={form.otherFee} onChange={e => update('otherFee', e.target.value)} />
+         </div>
+         <div className="form-group">
+           <label>Ghi chú</label>
+           <input type="text" placeholder="VD: Sửa vòi nước..." value={form.otherNote} onChange={e => update('otherNote', e.target.value)} />
+         </div>
+       </div>
+
+       {/* Discount */}
+       <div className="card animate-in">
+         <div className="card-title">🎁 Giảm giá</div>
+         <div className="form-group">
+           <label>Số tiền giảm (VNĐ)</label>
+           <input type="number" placeholder="0" value={form.discountFee} onChange={e => update('discountFee', e.target.value)} />
+         </div>
+         <div className="form-group">
+           <label>Lý do giảm</label>
+           <input type="text" placeholder="VD: Khách hàng thân thiết..." value={form.discountNote} onChange={e => update('discountNote', e.target.value)} />
+         </div>
+       </div>
 
       {/* Calculate */}
       <button className="btn btn-primary animate-in" onClick={calculate}>
@@ -293,8 +309,9 @@ export default function Calculator() {
                 <tr><td>Tiền nước ({result.waterUsage} m³)</td><td>{formatVND(result.waterCost)}</td></tr>
                 <tr><td>Rác</td><td>{formatVND(result.trashFee)}</td></tr>
                 <tr><td>Internet</td><td>{formatVND(result.internetFee)}</td></tr>
-                {result.otherFee > 0 && <tr><td>{result.otherNote || 'Khác'}</td><td>{formatVND(result.otherFee)}</td></tr>}
-                <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(result.total)}</td></tr>
+{result.otherFee > 0 && <tr><td>{result.otherNote || 'Khác'}</td><td>{formatVND(result.otherFee)}</td></tr>}
+                 {result.discountFee > 0 && <tr><td>🎁 {result.discountNote || 'Giảm giá'}</td><td>-{formatVND(result.discountFee)}</td></tr>}
+                 <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(result.total)}</td></tr>
               </tbody>
             </table>
 

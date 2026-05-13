@@ -65,14 +65,28 @@ export default function Receipt({ data }) {
             </td>
           </tr>
 
-          {data.otherFee > 0 && (
-            <tr>
-              <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
-                <span style={{ fontWeight: 'bold' }}>{data.otherNote || 'Khác'}: </span>
-                <span style={{ float: 'right' }}>{formatVND(data.otherFee)}</span>
-              </td>
-            </tr>
-          )}
+{data.otherFee > 0 && (
+             <tr>
+               <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc' }}>
+                 <span style={{ fontWeight: 'bold' }}>{data.otherNote || 'Khác'}: </span>
+                 <span style={{ float: 'right' }}>{formatVND(data.otherFee)}</span>
+               </td>
+             </tr>
+           )}
+
+           <tr>
+             <td colSpan="2" style={{ padding: '6px 0', borderBottom: '1px dashed #ccc', color: data.discountFee > 0 ? '#e74c3c' : 'inherit' }}>
+               <span style={{ fontWeight: 'bold' }}>🎁 Giảm giá: </span>
+               <span style={{ float: 'right' }}>{data.discountFee > 0 ? `-${formatVND(data.discountFee)}` : '0đ'}</span>
+             </td>
+           </tr>
+           {data.discountNote && (
+             <tr>
+               <td colSpan="2" style={{ padding: '2px 0 6px 0', fontSize: '11px', color: '#666', borderBottom: '1px dashed #ccc' }}>
+                 {data.discountNote}
+               </td>
+             </tr>
+           )}
         </tbody>
       </table>
       <div style={{ borderTop: '2px dashed black', margin: '10px 0' }}></div>

@@ -12,16 +12,21 @@ export function generateInvoiceText(invoice) {
   text += `Nước (${invoice.waterUsage} m³): ${formatVND(invoice.waterCost)}\n`;
   text += `Rác: ${formatVND(invoice.trashFee)}\n`;
   text += `Internet: ${formatVND(invoice.internetFee)}\n`;
-  
+
   if (invoice.otherFee > 0) {
     const note = invoice.otherNote || 'Khác';
     text += `${note}: ${formatVND(invoice.otherFee)}\n`;
   }
-  
+
+  if (invoice.discountFee > 0) {
+    const discountNote = invoice.discountNote || 'Giảm giá';
+    text += `🎁 ${discountNote}: -${formatVND(invoice.discountFee)}\n`;
+  }
+
   text += `--------------------------------\n`;
   text += `💰 TỔNG CỘNG: ${formatVND(invoice.total)}\n`;
   text += `\nVui lòng thanh toán hóa đơn đúng hạn. Cảm ơn!\n`;
-  
+
   return text;
 }
 

@@ -91,8 +91,9 @@ export default function InvoiceDetail() {
             <tr><td>Nước: {invoice.oldWater} → {invoice.newWater} ({invoice.waterUsage} m³ × {formatVND(invoice.waterPrice)})</td><td>{formatVND(invoice.waterCost)}</td></tr>
             <tr><td>Rác</td><td>{formatVND(invoice.trashFee)}</td></tr>
             <tr><td>Internet</td><td>{formatVND(invoice.internetFee)}</td></tr>
-            {invoice.otherFee > 0 && <tr><td>{invoice.otherNote || 'Khác'}</td><td>{formatVND(invoice.otherFee)}</td></tr>}
-            <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(invoice.total)}</td></tr>
+{invoice.otherFee > 0 && <tr><td>{invoice.otherNote || 'Khác'}</td><td>{formatVND(invoice.otherFee)}</td></tr>}
+             {invoice.discountFee > 0 && <tr><td>🎁 {invoice.discountNote || 'Giảm giá'}</td><td>-{formatVND(invoice.discountFee)}</td></tr>}
+             <tr className="total-row"><td>TỔNG CỘNG</td><td>{formatVND(invoice.total)}</td></tr>
           </tbody>
         </table>
       </div>

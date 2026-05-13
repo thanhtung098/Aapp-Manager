@@ -1,4 +1,5 @@
-const CACHE_NAME = 'phongtro-v1';
+const CACHE_VERSION = 'v1.0.0';
+const CACHE_NAME = `phongtro-${CACHE_VERSION}`;
 const API_CACHE_NAME = 'phongtro-api-v1';
 
 // Static assets to cache on install
@@ -20,9 +21,9 @@ function isNavigationRequest(request) {
   return request.mode === 'navigate';
 }
 
-// Helper: Check if request is for static asset
+// Helper: Check if request is for static asset (images, fonts)
 function isStaticAsset(url) {
-  const extensions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.svg', '.ico', '.woff', '.woff2'];
+  const extensions = ['.png', '.jpg', '.jpeg', '.svg', '.ico', '.woff', '.woff2'];
   return extensions.some(ext => url.pathname.endsWith(ext));
 }
 
@@ -87,7 +88,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy 3: Static assets → Cache-first with network fallback
+  // Strategy 3: JS/CSS → Network-first (luôn tải bản mới nhất)
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Strategy 4: Static assets khác (ảnh, font) → Cache-first with network fallback
   if (isStaticAsset(url)) {
     event.respondWith(
       caches.match(request).then((cached) => {
@@ -103,7 +120,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy 4: Other requests → Network-first with cache fallback
+  // Strategy 5: Other requests → Network-first with cache fallback
   event.respondWith(
     fetch(request)
       .then((response) => {
